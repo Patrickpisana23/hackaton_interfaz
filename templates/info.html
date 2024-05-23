@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h2 class="mb-3">Agregar Usuario</h2>
+            <form id="addUserForm" action="/add_user" method="POST">
+                <div class="form-group">
+                    <label for="userSelect">Seleccionar Usuario:</label>
+                    <select class="form-control" id="userSelect" name="userSelect">
+                        {% for user in users %}
+                            {% if user.clasificacion_tipo == "ALTO" %}
+                                <option value="{{ user['CLIENTE_APENOM'] }}">{{ user['CLIENTE_APENOM'] }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h2 class="mb-3">Listado de Usuarios Morosos</h2>
+            <div class="table-container">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Mensaje de Speech</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            {% if user.clasificacion_tipo == "ALTO" %}
+                                <tr>
+                                    <td>{{ user["CLIENTE_APENOM"] }}</td>
+                                    <td>{{ user["TELEFONO"] }}</td>
+                                    <td>{{ user["speech"] }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

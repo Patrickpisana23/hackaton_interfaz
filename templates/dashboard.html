@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-3">KPI de Seguimiento</h2>
+            <div class="pie-chart">
+                <canvas id="myChart" width="10" height="10"></canvas> 
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos para la gráfica
+        const data = {
+            labels: ['ALTO', 'MEDIO', 'BAJO'],
+            datasets: [{
+                label: 'Dataset',
+                data: [0, 0, 0],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Contamos las ocurrencias de cada clasificación en los usuarios
+        {% set alto_count = users|selectattr("clasificacion_tipo", "equalto", "ALTO")|list|length %}
+        {% set medio_count = users|selectattr("clasificacion_tipo", "equalto", "MEDIO")|list|length %}
+        {% set bajo_count = users|selectattr("clasificacion_tipo", "equalto", "BAJO")|list|length %}
+
+        // Actualizamos los datos de la gráfica
+        data.datasets[0].data = [{{ alto_count }}, {{ medio_count }}, {{ bajo_count }}];
+
+        // Configuración de la gráfica
+        const config = {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Gráfica Circular'
+                    }
+                }
+            },
+        };
+
+        // Crear la instancia de la gráfica
+        var myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+{% endblock %}
